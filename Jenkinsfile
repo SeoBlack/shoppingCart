@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = "shoppingcart-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         MAVEN_TOOL_NAME = "M3"
-        DOCKERHUB_CREDENTIALS_ID = "sorinoraibi575675"
+        DOCKERHUB_CREDENTIALS_ID = "docker_token"
         DOCKERHUB_REPO = "sorinoraibi575675/shoppingcart"
     }
 
