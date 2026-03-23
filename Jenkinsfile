@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "shoppingcart-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        MAVEN_TOOL_NAME = "Maven3"
+        MAVEN_TOOL_NAME = "M3"
         DOCKERHUB_CREDENTIALS_ID = "sorinoraibi575675"
     }
 
