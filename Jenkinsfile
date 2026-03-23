@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "shoppingcart-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        MAVEN_TOOL_NAME = "Maven3"
         DOCKERHUB_CREDENTIALS_ID = "sorinoraibi575675"
     }
 
@@ -17,10 +18,11 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
+                    def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
                     if (isUnix()) {
-                        sh 'mvn -B clean test package'
+                        sh "${mvnHome}/bin/mvn -B -V clean test package"
                     } else {
-                        bat 'mvn -B clean test package'
+                        bat "\"${mvnHome}\\bin\\mvn\" -B -V clean test package"
                     }
                 }
             }
