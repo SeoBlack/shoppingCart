@@ -19,13 +19,22 @@ public class ShoppingCart {
     public ArrayList<Map<Double, Integer>> getItems() {
         return items;
     }
+
+    //get one item total price
+    public double getLineTotal(int index) {
+        Map<Double, Integer> item = items.get(index);
+        double lineTotal = 0.0;
+        for (Map.Entry<Double, Integer> entry : item.entrySet()) {
+            lineTotal += entry.getKey() * entry.getValue();
+        }
+        return lineTotal;
+    }
+
+ 
     public Double getTotalPrice() {
-        Double totalPrice = 0.0;
-        System.out.println(items);
-        for (Map<Double, Integer> item : items) {
-            for (Map.Entry<Double, Integer> entry : item.entrySet()) {
-                totalPrice += entry.getKey() * entry.getValue();
-            }
+        double totalPrice = 0.0;
+        for (int i = 0; i < items.size(); i++) {
+            totalPrice += getLineTotal(i);
         }
         return totalPrice;
     }
