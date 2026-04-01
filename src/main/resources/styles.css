@@ -1,0 +1,239 @@
+/* 
+   Shopping Cart – JavaFX Stylesheet
+    */
+
+/*  Global */
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #ECEFF1;
+}
+
+/* 
+   SCENE 1 – Language Selection
+    */
+
+.language-screen {
+    -fx-background-color: linear-gradient(to bottom right, #1565C0, #1E88E5);
+}
+
+.app-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0, 0, 3);
+}
+
+.select-language-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+}
+
+.language-combo {
+    -fx-pref-height: 42px;
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.45);
+    -fx-border-radius: 8px;
+    -fx-border-width: 1.5px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.language-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.language-combo .arrow {
+    -fx-background-color: white;
+}
+
+.language-combo .list-cell {
+    -fx-text-fill: #1A237E;
+    -fx-font-size: 14px;
+    -fx-padding: 6px 14px;
+}
+
+/* 
+   SCENE 2 – Shopping Cart
+    */
+
+.cart-screen {
+    -fx-background-color: #ECEFF1;
+}
+
+/*  Header */
+.app-header {
+    -fx-background-color: #1565C0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 8, 0, 0, 3);
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/*  Cards */
+.form-card,
+.table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565C0;
+    -fx-padding: 0 0 6px 0;
+}
+
+/*  Form labels & inputs  */
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #546E7A;
+}
+
+.input-field {
+    -fx-pref-height: 38px;
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 6px;
+    -fx-border-color: #CFD8DC;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 4px 10px;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: #1E88E5;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(30, 136, 229, 0.30), 6, 0, 0, 0);
+}
+
+/*  Buttons  */
+.primary-button {
+    -fx-pref-height: 40px;
+    -fx-background-color: #1E88E5;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(30, 136, 229, 0.45), 6, 0, 0, 2);
+}
+
+.primary-button:hover {
+    -fx-background-color: #1565C0;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #0D47A1;
+    -fx-effect: none;
+}
+
+.danger-button {
+    -fx-pref-height: 38px;
+    -fx-pref-width: 110px;
+    -fx-background-color: #E53935;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-background-color: #C62828;
+}
+
+.danger-button:pressed {
+    -fx-background-color: #B71C1C;
+    -fx-effect: none;
+}
+
+/*  Error message  */
+.error-label {
+    -fx-text-fill: #C62828;
+    -fx-font-size: 12px;
+    -fx-background-color: #FFEBEE;
+    -fx-background-radius: 5px;
+    -fx-padding: 7px 11px;
+    -fx-border-color: #EF9A9A;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+}
+
+/*  Total price display  */
+.total-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565C0;
+}
+
+/*  Table */
+.cart-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 5px;
+}
+
+.cart-table .column-header-background {
+    -fx-background-color: #1565C0;
+    -fx-background-radius: 5px 5px 0 0;
+}
+
+.cart-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.cart-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.cart-table .filler {
+    -fx-background-color: #1565C0;
+}
+
+.cart-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #F0F0F0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.cart-table .table-row-cell:odd {
+    -fx-background-color: #F8FAFB;
+}
+
+.cart-table .table-row-cell:selected {
+    -fx-background-color: #E3F2FD;
+}
+
+.cart-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #0D47A1;
+}
+
+.cart-table .table-cell {
+    -fx-text-fill: #37474F;
+    -fx-padding: 9px 14px;
+    -fx-font-size: 13px;
+}
+
+/*  Bottom bar  */
+.bottom-bar {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/*  Separator  */
+.separator .line {
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+}
