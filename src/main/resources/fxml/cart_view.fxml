@@ -16,15 +16,15 @@
             fx:controller="org.example.CartController"
             styleClass="cart-screen">
 
-    <!-- ── Header ───────────────────────────────────────────── -->
+    <!--  Header  -->
     <top>
         <HBox styleClass="app-header">
             <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
-            <Label text="Shopping Cart" styleClass="header-title"/>
+            <Label text="%headerTitle" styleClass="header-title"/>
         </HBox>
     </top>
 
-    <!-- ── Center: form + table ─────────────────────────────── -->
+    <!--  Center: form + table  -->
     <center>
         <HBox spacing="16">
             <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
@@ -77,7 +77,7 @@
         </HBox>
     </center>
 
-    <!-- ── Bottom bar ────────────────────────────────────────── -->
+    <!--  Bottom bar  -->
     <bottom>
         <HBox styleClass="bottom-bar" alignment="CENTER_RIGHT">
             <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>

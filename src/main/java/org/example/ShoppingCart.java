@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-//{itemPrice, itemQuantity}
 public class ShoppingCart {
     ArrayList<Map<Double, Integer>> items;
     public ShoppingCart() {
