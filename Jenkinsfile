@@ -9,6 +9,7 @@ pipeline {
         IMAGE_TAG = "latest"
         MAVEN_TOOL_NAME = "M3"
         DOCKERHUB_CREDENTIALS_ID = "docker_token"
+        SONAR_HOST_URL = "https://sonarcloud.io"
     }
 
     stages {
@@ -23,9 +24,42 @@ pipeline {
                 script {
                     def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
                     if (isUnix()) {
-                        sh "${mvnHome}/bin/mvn -B -V clean test package"
+                        sh "${mvnHome}/bin/mvn -B -V clean verify"
                     } else {
-                        bat "\"${mvnHome}\\bin\\mvn\" -B -V clean test package"
+                        bat "\"${mvnHome}\\bin\\mvn\" -B -V clean verify"
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def missingVars = []
+                    if (!(env.SONAR_TOKEN ?: '').trim()) missingVars << 'SONAR_TOKEN'
+                    if (!(env.SONAR_PROJECT_KEY ?: '').trim()) missingVars << 'SONAR_PROJECT_KEY'
+                    if (!(env.SONAR_ORGANIZATION ?: '').trim()) missingVars << 'SONAR_ORGANIZATION'
+                    if (!missingVars.isEmpty()) {
+                        error("Missing required Sonar variables: ${missingVars.join(', ')}")
+                    }
+
+                    def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
+                    def sonarCmd = "\"${mvnHome}\\bin\\mvn\" -B -V sonar:sonar " +
+                            "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
+                            "-Dsonar.token=${env.SONAR_TOKEN} " +
+                            "-Dsonar.projectKey=${env.SONAR_PROJECT_KEY} " +
+                            "-Dsonar.organization=${env.SONAR_ORGANIZATION} " +
+                            "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+
+                    if (isUnix()) {
+                        sh "${mvnHome}/bin/mvn -B -V sonar:sonar " +
+                                "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
+                                "-Dsonar.token=${env.SONAR_TOKEN} " +
+                                "-Dsonar.projectKey=${env.SONAR_PROJECT_KEY} " +
+                                "-Dsonar.organization=${env.SONAR_ORGANIZATION} " +
+                                "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                    } else {
+                        bat sonarCmd
                     }
                 }
             }
@@ -62,6 +96,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'target/site/jacoco/**', allowEmptyArchive: true
         }
         success {
             echo "Pipeline completed successfully."
