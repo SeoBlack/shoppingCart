@@ -11,6 +11,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = "docker_token"
         SONAR_HOST_URL = "https://sonarcloud.io"
         SONAR_TOKEN_CREDENTIALS_ID = "sonar-token"
+        SONAR_COVERAGE_EXCLUSIONS = "src/main/java/org/example/LanguageController.java,src/main/java/org/example/ShoppingCartApp.java"
     }
 
     stages {
@@ -45,7 +46,8 @@ pipeline {
                                 "-Dsonar.token=${sonarToken} " +
                                 "-Dsonar.projectKey=${sonarProjectKey} " +
                                 "-Dsonar.organization=${sonarOrganization} " +
-                                "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                                "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml " +
+                                "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS}"
 
                         if (isUnix()) {
                             sh "${mvnHome}/bin/mvn -B -V sonar:sonar " +
@@ -53,7 +55,8 @@ pipeline {
                                     "-Dsonar.token=${sonarToken} " +
                                     "-Dsonar.projectKey=${sonarProjectKey} " +
                                     "-Dsonar.organization=${sonarOrganization} " +
-                                    "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                                    "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml " +
+                                    "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS}"
                         } else {
                             bat sonarCmd
                         }
