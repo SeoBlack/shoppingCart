@@ -36,4 +36,10 @@ class MainAndBootstrapTest {
         MainApp instance = ctor.newInstance();
         assertNotNull(instance);
     }
+
+    @Test
+    void mainDefaultConstructorIsCovered() {
+        Main instance = new Main();
+        assertNotNull(instance);
+    }
 }
