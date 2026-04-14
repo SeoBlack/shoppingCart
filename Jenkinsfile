@@ -11,7 +11,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = "docker_token"
         SONAR_HOST_URL = "https://sonarcloud.io"
         SONAR_TOKEN_CREDENTIALS_ID = "sonar-token"
-        SONAR_COVERAGE_EXCLUSIONS = "src/main/java/org/example/LanguageController.java,src/main/java/org/example/ShoppingCartApp.java"
+        SONAR_COVERAGE_EXCLUSIONS = "**/LanguageController.java,**/ShoppingCartApp.java"
     }
 
     stages {
@@ -41,6 +41,7 @@ pipeline {
                     def sonarOrganization = "${env.SONAR_ORGANIZATION ?: params.SONAR_ORGANIZATION ?: ''}".trim()
                     def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
                     def runSonar = { String sonarToken ->
+                        echo "Sonar coverage exclusions: ${env.SONAR_COVERAGE_EXCLUSIONS}"
                         def sonarCmd = "\"${mvnHome}\\bin\\mvn\" -B -V sonar:sonar " +
                                 "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
                                 "-Dsonar.token=${sonarToken} " +
