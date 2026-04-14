@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LanguageController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShoppingCart</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">LanguageController.java</span></div><h1>LanguageController.java</h1><pre class="source lang-java linenums">package org.example;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+<span class="nc" id="L16">public class LanguageController {</span>
+
+    @FXML
+    private ComboBox&lt;String&gt; langCombo;
+
+<span class="nc" id="L21">    private final LocalizationService localizationService = new LocalizationService();</span>
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L25">        langCombo.getItems().addAll(</span>
+                &quot;English&quot;,
+                &quot;Svenska&quot;,
+                &quot;Suomi&quot;,
+                &quot;\u65E5\u672C\u8A9E&quot;,
+                &quot;\u0627\u0644\u0639\u0631\u0628\u064A\u0629&quot;
+        );
+<span class="nc" id="L32">        langCombo.getSelectionModel().selectFirst();</span>
+<span class="nc" id="L33">    }</span>
+
+    @FXML
+    private void onConfirm() {
+        String lang;
+<span class="nc" id="L38">        boolean rtl = false;</span>
+
+<span class="nc bnc" id="L40" title="All 5 branches missed.">        switch (langCombo.getSelectionModel().getSelectedIndex()) {</span>
+<span class="nc" id="L41">            case 1 -&gt; lang = &quot;sv&quot;;</span>
+<span class="nc" id="L42">            case 2 -&gt; lang = &quot;fi&quot;;</span>
+<span class="nc" id="L43">            case 3 -&gt; lang = &quot;ja&quot;;</span>
+            case 4 -&gt; {
+<span class="nc" id="L45">                lang = &quot;ar&quot;;</span>
+<span class="nc" id="L46">                rtl = true;</span>
+<span class="nc" id="L47">            }</span>
+<span class="nc" id="L48">            default -&gt; lang = &quot;en&quot;;</span>
+        }
+
+<span class="nc" id="L51">        final String languageCode = lang;</span>
+
+        Map&lt;String, String&gt; strings;
+        try {
+<span class="nc" id="L55">            strings = localizationService.loadStrings(languageCode);</span>
+<span class="nc" id="L56">        } catch (SQLException e) {</span>
+<span class="nc" id="L57">            new Alert(Alert.AlertType.ERROR,</span>
+<span class="nc" id="L58">                    &quot;Could not load UI strings from the database.\n&quot; + e.getMessage()).showAndWait();</span>
+<span class="nc" id="L59">            return;</span>
+<span class="nc" id="L60">        }</span>
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (strings.isEmpty()) {</span>
+<span class="nc" id="L63">            new Alert(Alert.AlertType.WARNING,</span>
+<span class="nc" id="L64">                    &quot;No localization rows found for language \&quot;&quot; + languageCode + &quot;\&quot;.&quot;).showAndWait();</span>
+<span class="nc" id="L65">            return;</span>
+        }
+
+<span class="nc" id="L68">        ResourceBundle bundle = new MapResourceBundle(strings);</span>
+<span class="nc" id="L69">        CartService cartService = new CartService();</span>
+
+        try {
+<span class="nc" id="L72">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/fxml/cart_view.fxml&quot;));</span>
+<span class="nc" id="L73">            loader.setResources(bundle);</span>
+<span class="nc" id="L74">            javafx.scene.Parent root = loader.load();</span>
+
+<span class="nc" id="L76">            CartController cartController = loader.getController();</span>
+<span class="nc" id="L77">            cartController.initCart(new ShoppingCart(), languageCode, cartService);</span>
+
+<span class="nc" id="L79">            Scene scene = new Scene(root, 800, 580);</span>
+<span class="nc" id="L80">            scene.getStylesheets().add(getClass().getResource(&quot;/styles.css&quot;).toExternalForm());</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (rtl) {</span>
+<span class="nc" id="L82">                scene.getRoot().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);</span>
+            }
+
+<span class="nc" id="L85">            Stage stage = (Stage) langCombo.getScene().getWindow();</span>
+<span class="nc" id="L86">            stage.setResizable(true);</span>
+<span class="nc" id="L87">            stage.setScene(scene);</span>
+<span class="nc" id="L88">            stage.setWidth(800);</span>
+<span class="nc" id="L89">            stage.setHeight(620);</span>
+<span class="nc" id="L90">            stage.centerOnScreen();</span>
+
+<span class="nc" id="L92">        } catch (IOException e) {</span>
+<span class="nc" id="L93">            e.printStackTrace();</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

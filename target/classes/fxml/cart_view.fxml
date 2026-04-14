@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.CartController"
+            styleClass="cart-screen">
+
+    <!--  Header  -->
+    <top>
+        <HBox styleClass="app-header">
+            <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+            <Label text="%headerTitle" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <!--  Center: form + table  -->
+    <center>
+        <HBox spacing="16">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <!-- Input form -->
+            <VBox spacing="12" styleClass="form-card"
+                  prefWidth="280" minWidth="240" maxWidth="320">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <Label styleClass="section-title" text="%menuAddItem"/>
+
+                <Label styleClass="field-label" text="%enterPrice"/>
+                <TextField fx:id="priceField" styleClass="input-field" promptText="0.00"/>
+
+                <Label styleClass="field-label" text="%enterQuantity"/>
+                <TextField fx:id="qtyField" styleClass="input-field" promptText="1"/>
+
+                <Button fx:id="addBtn"
+                        styleClass="primary-button"
+                        maxWidth="Infinity"
+                        text="%menuAddItem"
+                        onAction="#onAddItem"/>
+
+                <Label fx:id="errorLabel"
+                       styleClass="error-label"
+                       visible="false" managed="false"
+                       wrapText="true"/>
+
+                <Separator/>
+
+                <Label styleClass="field-label" text="%totalPrice"/>
+                <Label fx:id="totalValue" text="0.00" styleClass="total-value"/>
+            </VBox>
+
+            <!-- Items table -->
+            <VBox spacing="12" styleClass="table-card" HBox.hgrow="ALWAYS">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <Label styleClass="section-title" text="%menuDisplayTotalPrice"/>
+
+                <TableView fx:id="cartTable" styleClass="cart-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="priceCol"    text="%enterPrice"/>
+                        <TableColumn fx:id="qtyCol"      text="%enterQuantity"/>
+                        <TableColumn fx:id="lineTotalCol" text="%lineTotal"/>
+                    </columns>
+                    <placeholder><Label text=""/></placeholder>
+                </TableView>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!--  Bottom bar  -->
+    <bottom>
+        <HBox styleClass="bottom-bar" alignment="CENTER_RIGHT">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+            <Button fx:id="exitBtn"
+                    styleClass="danger-button"
+                    text="%menuExit"
+                    onAction="#onExit"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
