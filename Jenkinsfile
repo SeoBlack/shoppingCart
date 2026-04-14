@@ -10,6 +10,7 @@ pipeline {
         MAVEN_TOOL_NAME = "M3"
         DOCKERHUB_CREDENTIALS_ID = "docker_token"
         SONAR_HOST_URL = "https://sonarcloud.io"
+        SONAR_TOKEN_CREDENTIALS_ID = "sonar-token"
     }
 
     stages {
@@ -35,31 +36,47 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def missingVars = []
-                    if (!(env.SONAR_TOKEN ?: '').trim()) missingVars << 'SONAR_TOKEN'
-                    if (!(env.SONAR_PROJECT_KEY ?: '').trim()) missingVars << 'SONAR_PROJECT_KEY'
-                    if (!(env.SONAR_ORGANIZATION ?: '').trim()) missingVars << 'SONAR_ORGANIZATION'
-                    if (!missingVars.isEmpty()) {
-                        error("Missing required Sonar variables: ${missingVars.join(', ')}")
+                    def sonarProjectKey = "${env.SONAR_PROJECT_KEY ?: params.SONAR_PROJECT_KEY ?: ''}".trim()
+                    def sonarOrganization = "${env.SONAR_ORGANIZATION ?: params.SONAR_ORGANIZATION ?: ''}".trim()
+                    def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
+                    def runSonar = { String sonarToken ->
+                        def sonarCmd = "\"${mvnHome}\\bin\\mvn\" -B -V sonar:sonar " +
+                                "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
+                                "-Dsonar.token=${sonarToken} " +
+                                "-Dsonar.projectKey=${sonarProjectKey} " +
+                                "-Dsonar.organization=${sonarOrganization} " +
+                                "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+
+                        if (isUnix()) {
+                            sh "${mvnHome}/bin/mvn -B -V sonar:sonar " +
+                                    "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
+                                    "-Dsonar.token=${sonarToken} " +
+                                    "-Dsonar.projectKey=${sonarProjectKey} " +
+                                    "-Dsonar.organization=${sonarOrganization} " +
+                                    "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                        } else {
+                            bat sonarCmd
+                        }
                     }
 
-                    def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
-                    def sonarCmd = "\"${mvnHome}\\bin\\mvn\" -B -V sonar:sonar " +
-                            "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
-                            "-Dsonar.token=${env.SONAR_TOKEN} " +
-                            "-Dsonar.projectKey=${env.SONAR_PROJECT_KEY} " +
-                            "-Dsonar.organization=${env.SONAR_ORGANIZATION} " +
-                            "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                    if (!sonarProjectKey) {
+                        error("Missing required Sonar variable: SONAR_PROJECT_KEY (env var or job parameter)")
+                    }
+                    if (!sonarOrganization) {
+                        error("Missing required Sonar variable: SONAR_ORGANIZATION (env var or job parameter)")
+                    }
 
-                    if (isUnix()) {
-                        sh "${mvnHome}/bin/mvn -B -V sonar:sonar " +
-                                "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
-                                "-Dsonar.token=${env.SONAR_TOKEN} " +
-                                "-Dsonar.projectKey=${env.SONAR_PROJECT_KEY} " +
-                                "-Dsonar.organization=${env.SONAR_ORGANIZATION} " +
-                                "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                    def directToken = "${env.SONAR_TOKEN ?: ''}".trim()
+                    if (directToken) {
+                        runSonar(directToken)
                     } else {
-                        bat sonarCmd
+                        withCredentials([string(credentialsId: env.SONAR_TOKEN_CREDENTIALS_ID, variable: 'SONAR_TOKEN_FROM_CREDENTIAL')]) {
+                            def credentialToken = "${env.SONAR_TOKEN_FROM_CREDENTIAL ?: ''}".trim()
+                            if (!credentialToken) {
+                                error("Missing Sonar token. Set SONAR_TOKEN env var or create Secret Text credential with ID '${env.SONAR_TOKEN_CREDENTIALS_ID}'.")
+                            }
+                            runSonar(credentialToken)
+                        }
                     }
                 }
             }
