@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LanguageController {
 
@@ -90,7 +92,7 @@ public class LanguageController {
             stage.centerOnScreen();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(LanguageController.class.getName()).log(Level.SEVERE, "Error loading cart view", e);
         }
     }
 }
