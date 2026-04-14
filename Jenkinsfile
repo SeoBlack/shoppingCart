@@ -12,6 +12,7 @@ pipeline {
         SONAR_HOST_URL = "https://sonarcloud.io"
         SONAR_TOKEN_CREDENTIALS_ID = "sonar-token"
         SONAR_COVERAGE_EXCLUSIONS = "**/LanguageController.java,**/ShoppingCartApp.java"
+        SONAR_FILE_EXCLUSIONS = "**/LanguageController.java,**/ShoppingCartApp.java"
     }
 
     stages {
@@ -42,13 +43,15 @@ pipeline {
                     def mvnHome = tool name: env.MAVEN_TOOL_NAME, type: 'maven'
                     def runSonar = { String sonarToken ->
                         echo "Sonar coverage exclusions: ${env.SONAR_COVERAGE_EXCLUSIONS}"
+                        echo "Sonar file exclusions: ${env.SONAR_FILE_EXCLUSIONS}"
                         def sonarCmd = "\"${mvnHome}\\bin\\mvn\" -B -V sonar:sonar " +
                                 "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
                                 "-Dsonar.token=${sonarToken} " +
                                 "-Dsonar.projectKey=${sonarProjectKey} " +
                                 "-Dsonar.organization=${sonarOrganization} " +
                                 "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml " +
-                                "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS}"
+                                "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS} " +
+                                "-Dsonar.exclusions=${env.SONAR_FILE_EXCLUSIONS}"
 
                         if (isUnix()) {
                             sh "${mvnHome}/bin/mvn -B -V sonar:sonar " +
@@ -57,7 +60,8 @@ pipeline {
                                     "-Dsonar.projectKey=${sonarProjectKey} " +
                                     "-Dsonar.organization=${sonarOrganization} " +
                                     "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml " +
-                                    "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS}"
+                                    "-Dsonar.coverage.exclusions=${env.SONAR_COVERAGE_EXCLUSIONS} " +
+                                    "-Dsonar.exclusions=${env.SONAR_FILE_EXCLUSIONS}"
                         } else {
                             bat sonarCmd
                         }
