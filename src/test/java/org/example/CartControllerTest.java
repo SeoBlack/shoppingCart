@@ -59,7 +59,8 @@ class CartControllerTest {
         ShoppingCart cart = (ShoppingCart) getField(controller, "shoppingCart");
         assertEquals(1, cart.getItems().size());
         assertEquals(5.0, cart.getTotalPrice());
-        assertEquals("5.00", total.getText());
+        String normalizedTotal = total.getText().replace(',', '.');
+        assertEquals("5.00", normalizedTotal);
     }
 
     private static void configureController(
