@@ -26,6 +26,11 @@ RUN mvn -q dependency:copy \
         -Dartifact=org.openjfx:javafx-fxml:17.0.6:jar:linux     \
         -DoutputDirectory=./javafx
 
+# Copy JDBC driver JAR for runtime classpath in container
+RUN mvn -q dependency:copy \
+        -Dartifact=com.mysql:mysql-connector-j:8.3.0 \
+        -DoutputDirectory=./libs
+
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────
 FROM eclipse-temurin:17-jre
@@ -39,16 +44,34 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xvfb       \
         x11vnc     \
+        x11-utils  \
+        libgtk-3-0 \
+        libglib2.0-0 \
+        libpango-1.0-0 \
+        libpangocairo-1.0-0 \
+        libcairo2  \
+        libgdk-pixbuf-2.0-0 \
+        libatk1.0-0 \
+        libatk-bridge2.0-0 \
+        libatspi2.0-0 \
         libx11-6   \
         libxext6   \
         libxrender1 \
+        libxrandr2 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxfixes3 \
+        libxkbcommon0 \
         libxtst6   \
         libxi6     \
+        libnss3    \
+        libasound2t64 \
         libgl1     && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/target/*.jar  app.jar
 COPY --from=build /app/javafx        /app/javafx
+COPY --from=build /app/libs          /app/libs
 COPY docker-entrypoint.sh            /app/start.sh
 RUN chmod +x /app/start.sh
 
